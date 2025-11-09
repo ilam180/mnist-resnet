@@ -13,7 +13,19 @@ def load_images():
     with open(file, "w") as f:
         for image_path in image_dir.glob("*.png"):
             img = cv2.imread(str(image_path))
-            f.write(f"{image_path.name}: shape={img.shape}\n")  
+
+            # IQR range
+            red = img[:, :, 2].flatten()
+            blue = img[:, :, 0].flatten()
+
+            red_q1 = np.percentile(red, 25)
+            red_q3 = np.percentile(red, 75)
+            blue_q1 = np.percentile(blue, 25)
+            blue_q3 = np.percentile(blue, 75)
+            red_iqr = red_q3 - red_q1
+            blue_iqr = blue_q3 - blue_q1
+
+            f.write(f"{image_path.name}: shape={img.shape}, red_iqr={red_iqr:.2f}, blue_iqr={blue_iqr:.2f}\n")  
             images.append((image_path.name, img))
 
     return images
