@@ -8,15 +8,15 @@ from pathlib import Path
 
 def load_images():
     image_dir = Path(__file__).parent / "images" / "images"
+    file = Path(__file__).parent / "image_files_info.txt"
+
     images = []
 
-    for image_path in image_dir.glob("*.png"):
-        
-        img = cv2.imread(str(image_path))
-
-        print(f"{image_path.name}: shape={img.shape}")  
-        
-        images.append((image_path.name, img))
+    with open(file, "w") as f:
+        for image_path in image_dir.glob("*.png"):
+            img = cv2.imread(str(image_path))
+            f.write(f"{image_path.name}: shape={img.shape}\n")  
+            images.append((image_path.name, img))
 
     return images
 
@@ -49,5 +49,5 @@ def min_max_rgb(image_path):
     return (img_min, img_max)
 
 if __name__ == "__main__":
-    pass
+    load_images()
 
