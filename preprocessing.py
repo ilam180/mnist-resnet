@@ -16,16 +16,34 @@ def load_images():
 
             # IQR range
             red = img[:, :, 2].flatten()
+            green = img[:, :, 1].flatten()
             blue = img[:, :, 0].flatten()
 
-            red_q1 = np.percentile(red, 25)
-            red_q3 = np.percentile(red, 75)
-            blue_q1 = np.percentile(blue, 25)
-            blue_q3 = np.percentile(blue, 75)
+            red_q1, red_q3 = np.percentile(red, [25,75])
+            green_q1, green_q3 = np.percentile(green, [25,75])
+            blue_q1, blue_q3 = np.percentile(blue, [25,75])
+            
             red_iqr = red_q3 - red_q1
+            green_iqr = green_q3 - green_q1
             blue_iqr = blue_q3 - blue_q1
 
-            f.write(f"{image_path.name}: shape={img.shape}, red_iqr={red_iqr:.2f}, blue_iqr={blue_iqr:.2f}\n")  
+            # finding the min and max values
+            img_min, img_max = min_max_rgb(str(image_path))
+
+            red_min = img_min[0, 0, 0]
+            green_min = img_min[0, 0, 1]
+            blue_min = img_min[0, 0, 2]
+
+            red_max = img_max[0, 0, 0]
+            green_max = img_max[0, 0, 1]
+            blue_max = img_max[0, 0, 2]
+
+            f.write(f"{image_path.name}: dimensions={img.shape[:2]} \n" 
+                    f"\tRed: min={red_min}, max={red_max}, IQR={red_iqr:.2f}\n"
+                    f"\tGreen: min={green_min}, max={green_max}, IQR={green_iqr:.2f}\n"
+                    f"\tBlue: min={blue_min}, max={blue_max}, IQR={blue_iqr:.2f}\n\n"
+                    )  
+            
             images.append((image_path.name, img))
 
     return images
