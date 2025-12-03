@@ -3,21 +3,39 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 
-dataset = TensorDataset(None, None)  # training data
-dataloader = DataLoader(dataset, batch_size=None, shuffle=True)  # choose batch size
 
-criterion = nn.CrossEntropyLoss()  # or whatever we choose
-model = None  # resnet
+def train(model, X_train, y_train, X_valid, y_valid, batch_size, lr, epochs):
+    dataset = TensorDataset(X_train, y_train)
+    trainloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-optimizer = optim.SGD(model.parameters(), lr=None)  # choose learning rate / optimizer
+    criterion = nn.CrossEntropyLoss()  # or whatever we choose
 
-epochs = None  # choose epochs
+    optimizer = optim.SGD(model.parameters(), lr=lr)
 
-for epoch in range(epochs):
-    for data in dataloader:
-        feature, target = data
-        prediction = model(feature)
-        loss = criterion(prediction, target)
-        loss.backward()
-        optimizer.step()
-        optimizer.zero_grad()
+    model.train()
+
+    train_losses = []
+    validation_losses = []
+    validation_accuracies = []
+
+    for epoch in range(epochs):
+        training_loss = 0
+        for data in trainloader:
+            feature, target = data
+            prediction = model(feature)
+            loss = criterion(prediction, target)
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+            training_loss += loss.item()
+
+        epoch_training_loss = training_loss / len(trainloader)
+        train_losses.append(epoch_training_loss)
+
+        validation_loss, validation_accuracy = evaluate(
+            model, X_valid, y_valid, batch_size, criterion
+        )
+        validation_losses.append(validation_loss)
+        validation_accuracies.append(validation_accuracy)
+
+    return train_losses, validation_losses, validation_accuracies
