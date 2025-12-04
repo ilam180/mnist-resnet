@@ -5,24 +5,24 @@ Machine Learning project for detecting potential colorectal cancer based on the 
 ## Project Structure
 
 ```text
-awesome-ml-project/
+mnist-resnet/
 │
 ├── data/               # Datasets (train, test, raw, processed)
-│   ├── raw/            # Original raw data
-│   └── processed/      # Cleaned and processed data
+│   ├── dataset.py            
+│   └── transforms.py     
 │
-├── notebooks/          # Jupyter notebooks for EDA & experimentation
-│   └── exploratory_analysis.ipynb
+├── images/          # training images from MHIST dataset
 │
-├── src/                # Source code
-│   ├── data_preprocessing.py
-│   ├── train_model.py
-│   └── predict.py
+├── models/                
+│   └── resnet.py   # ResNet18
 │
-├── models/             # Saved models or checkpoints
-│   └── random_forest.pkl
+├── train/             # Saved models or checkpoints
+│   ├── evaluate.py
+│   ├── train.py        
+│   └── utils.py
 │
-├── requirements.txt    # Project dependencies
-├── README.md
-└── LICENSE
+├── annotations.csv
+├── preprocessing.py
+└── README.md
+```
 
