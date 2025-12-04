@@ -21,6 +21,7 @@ mnist-resnet/
 │   ├── train.py        
 │   └── utils.py
 │
+├── main.py
 ├── annotations.csv
 ├── preprocessing.py
 └── README.md
