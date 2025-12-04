@@ -28,4 +28,48 @@ class BasicBlock(nn.Module):
             out = self.relu(out)
             return out
 
+class ResNet18(nn.Module):
+    def __init__(self, num_classes=2): # 2 possible outputs: Cancerous/Noncancerous
+        super(ResNet18, self).__init__()
+        self.in_channels = 64
+        self.conv1 = nn.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.relu = nn.ReLU(inplace=True)
+
+        self.layer1 = self._make_layer(BasicBlock, 64, 2, stride=1)
+        self.layer2 = self._make_layer(BasicBlock, 128, 2, stride=2)
+        self.layer3 = self._make_layer(BasicBlock, 256, 2, stride=2)
+        self.layer4 = self._make_layer(BasicBlock, 512, 2, stride=2)
+
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(512, num_classes)
+
+        def _make_layer(self, block, out_channels, blocks, stride):
+            strides = [stride] + [1] * (blocks - 1)
+            layers = []
+            for stride in strides:
+                layers.append(block(self.in_channels, out_channels, stride))
+                self.in_channels = out_channels
+            return nn.Sequential(*layers)
+
+        def forward (self, x):
+            # The first three steps
+            out = self.conv1(x)
+            out = self.bn1(out)
+            out = self.relu(out)
+
+            # Bulk of computation/stages
+            out = self.layer1(out)
+            out = self.layer2(out)
+            out = self.layer3(out)
+            out = self.layer4(out)
+
+            # Final layers/avgpool
+            out = self.avgpool(out)
+            out = out.view(out.size(0), -1)
+            out = self.fc(out)
+            return out
+
+
+
 
