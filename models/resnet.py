@@ -44,31 +44,31 @@ class ResNet18(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512, num_classes)
 
-        def _make_layer(self, block, out_channels, blocks, stride):
-            strides = [stride] + [1] * (blocks - 1)
-            layers = []
-            for stride in strides:
-                layers.append(block(self.in_channels, out_channels, stride))
-                self.in_channels = out_channels
-            return nn.Sequential(*layers)
+    def _make_layer(self, block, out_channels, blocks, stride):
+        strides = [stride] + [1] * (blocks - 1)
+        layers = []
+        for stride in strides:
+            layers.append(block(self.in_channels, out_channels, stride))
+            self.in_channels = out_channels
+        return nn.Sequential(*layers)
 
-        def forward (self, x):
-            # The first three steps
-            out = self.conv1(x)
-            out = self.bn1(out)
-            out = self.relu(out)
+    def forward (self, x):
+        # The first three steps
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
 
-            # Bulk of computation/stages
-            out = self.layer1(out)
-            out = self.layer2(out)
-            out = self.layer3(out)
-            out = self.layer4(out)
+        # Bulk of computation/stages
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
 
-            # Final layers/avgpool
-            out = self.avgpool(out)
-            out = out.view(out.size(0), -1)
-            out = self.fc(out)
-            return out
+        # Final layers/avgpool
+        out = self.avgpool(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
+        return out
 
 
 

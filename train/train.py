@@ -2,8 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
-from evaluate import evaluate
-from dataset import create_dataloader
+from .evaluate import evaluate
 
 def train(model, X_train, y_train, X_valid, y_valid, batch_size, lr, epochs):
     dataset = TensorDataset(X_train, y_train)
