@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
-from evaluate import evaluate
+from .evaluate import evaluate
 
 
 def train(model, trainloader, validloader, lr, epochs):
