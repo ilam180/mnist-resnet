@@ -18,9 +18,12 @@ def train(model, trainloader, validloader, lr, epochs):
     validation_accuracies = []
 
     for epoch in range(epochs):
+        print(f"Epoch {epoch+1}/{epochs}")
         training_loss = 0
         for data in trainloader:
             feature, target = data
+            print(type(target), target)
+
             prediction = model(feature)
             loss = criterion(prediction, target)
             loss.backward()
